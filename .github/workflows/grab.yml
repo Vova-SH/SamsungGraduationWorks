@@ -1,0 +1,119 @@
+name: Grab graduation works
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination_folder:
+        description: 'Choose folder'
+        required: true
+
+jobs:
+  get-list-works:
+    runs-on: ubuntu-latest
+    outputs:
+      works: ${{ steps.setup_repos.outputs.works }}
+    steps:
+      - name: Checkout last changes
+        uses: actions/checkout@v3
+
+      - name: Read base information from ${{ github.event.inputs.destination_folder }}/repos.json
+        id: setup_repos
+        run: |
+          JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/'%0A'}"
+          JSON="${JSON//$'\r'/'%0D'}"
+          echo "::set-output name=works::${JSON}"
+
+      - name: Checking data
+        run: echo "${{ steps.setup_repos.outputs.works }}"
+
+
+
+  load-latest-release:
+    needs: get-list-works
+    strategy:
+      matrix:
+        data: ${{ fromJson(needs.get-list-works.outputs.works) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load latest release from ${{ matrix.data.repo }}
+        uses: robinraju/release-downloader@v1.3
+        with:
+          repository: ${{ matrix.data.repo }}
+          latest: true
+          fileName: "*"
+          out-file-path: repos/${{ matrix.data.folder }}
+          tarBall: false
+          zipBall: true
+          
+      - name: Check APK
+        id: check_apk
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "repos/${{ matrix.data.folder }}/*.apk"
+          
+      - name: Check PPT
+        id: check_ppt
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "repos/${{ matrix.data.folder }}/*.ppt"
+          
+      - name: Check PPTX
+        id: check_pptx
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "repos/${{ matrix.data.folder }}/*.pptx"
+          
+      - name: Check PDF
+        id: check_pdf
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "repos/${{ matrix.data.folder }}/*.pdf"
+        
+      - name: Save to artifacts (if all files exists)
+        if: ${{ steps.check_apk.outputs.files_exists == 'true' && ( steps.check_ppt.outputs.files_exists == 'true' || steps.check_pptx.outputs.files_exists == 'true' || steps.check_pdf.outputs.files_exists == 'true' ) }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.data.folder }}
+          path: |
+            repos/${{ matrix.data.folder }}/*.ppt
+            repos/${{ matrix.data.folder }}/*.pptx
+            repos/${{ matrix.data.folder }}/*.pdf
+            repos/${{ matrix.data.folder }}/*.apk
+            repos/${{ matrix.data.folder }}/*.zip
+
+
+
+  publish:
+    needs: load-latest-release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write 
+    steps:
+      - name: Checkout last changes
+        uses: actions/checkout@v3
+
+      - name: Remove old releases (if exist)
+        run: |
+          if [ -d "${{ github.event.inputs.destination_folder }}/Projects" ]; then
+            rmdir ${{ github.event.inputs.destination_folder }}/Projects
+          fi
+
+      - name: Download all correct projects
+        uses: actions/download-artifact@v3
+        with:
+          path: ${{ github.event.inputs.destination_folder }}/Projects
+
+      - name: Push new projects
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_user_name: git-bot
+          commit_user_email: git-bot@noreply.github.com
+          commit_message: Update projects info on ${{ github.event.inputs.destination_folder }}
+
+      - name: Upload projects to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Projects-${{ github.event.inputs.destination_folder }}
+          path: ${{ github.event.inputs.destination_folder }}/projects/**
