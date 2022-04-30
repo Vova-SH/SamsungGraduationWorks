@@ -117,4 +117,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: Projects-${{ github.event.inputs.destination_folder }}
-          path: ${{ github.event.inputs.destination_folder }}/projects/**
+          path: ${{ github.event.inputs.destination_folder }}/Projects/**
