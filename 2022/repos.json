@@ -1,4 +1,5 @@
 [
+  {repo: "Discorre/BookReserve", folder: "Михайлов Егор"},
   {repo: "GalinaDa/ListOfProduct", folder: "Галина Давыденко"},
   {repo: "kruvasan007/DeliveryBlitz", folder: "Суркова Анастасия"},
   {repo: "Nikita-812/RecognitionText", folder: "Пашинин Никита"},
@@ -13,4 +14,3 @@
   {repo: "br1ghtless3/Quiz", folder: "Хорошман Дарья"},
   {repo: "11330261820/mycheckers", folder: "Журбин Альберт"},
   {repo: "quaeritis-testa/FireTam", folder: "Редут Роман"}
-]
