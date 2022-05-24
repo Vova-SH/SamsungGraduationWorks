@@ -106,15 +106,15 @@ jobs:
         with:
           path: ${{ github.event.inputs.destination_folder }}/Projects
 
+      - name: Upload projects to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Projects-${{ github.event.inputs.destination_folder }}
+          path: ${{ github.event.inputs.destination_folder }}/Projects/**
+
       - name: Push new projects
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_user_name: git-bot
           commit_user_email: git-bot@noreply.github.com
           commit_message: Update projects info on ${{ github.event.inputs.destination_folder }}
-
-      - name: Upload projects to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: Projects-${{ github.event.inputs.destination_folder }}
-          path: ${{ github.event.inputs.destination_folder }}/Projects/**
