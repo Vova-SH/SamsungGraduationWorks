@@ -14,7 +14,7 @@ jobs:
       works: ${{ steps.setup_repos.outputs.works }}
     steps:
       - name: Checkout last changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.2
 
       - name: Read base information from ${{ github.event.inputs.destination_folder }}/repos.json
         id: setup_repos
@@ -39,7 +39,7 @@ jobs:
     steps:
       - name: Load latest release from ${{ matrix.data.repo }}
         continue-on-error: true
-        uses: robinraju/release-downloader@v1.3
+        uses: robinraju/release-downloader@v1.7
         with:
           repository: ${{ matrix.data.repo }}
           latest: true
@@ -50,31 +50,31 @@ jobs:
           
       - name: Check APK
         id: check_apk
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: "repos/${{ matrix.data.folder }}/*.apk"
           
       - name: Check PPT
         id: check_ppt
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: "repos/${{ matrix.data.folder }}/*.ppt"
           
       - name: Check PPTX
         id: check_pptx
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: "repos/${{ matrix.data.folder }}/*.pptx"
           
       - name: Check PDF
         id: check_pdf
-        uses: andstor/file-existence-action@v1
+        uses: andstor/file-existence-action@v2
         with:
           files: "repos/${{ matrix.data.folder }}/*.pdf"
         
       - name: Save to artifacts (if all files exists)
         if: ${{ steps.check_apk.outputs.files_exists == 'true' && ( steps.check_ppt.outputs.files_exists == 'true' || steps.check_pptx.outputs.files_exists == 'true' || steps.check_pdf.outputs.files_exists == 'true' ) }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ matrix.data.folder }}
           path: |
@@ -93,7 +93,7 @@ jobs:
       contents: write 
     steps:
       - name: Checkout last changes
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3.5.2
 
       - name: Remove old releases (if exist)
         run: |
@@ -102,12 +102,12 @@ jobs:
           fi
 
       - name: Download all correct projects
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v3.0.2
         with:
           path: ${{ github.event.inputs.destination_folder }}/Projects
 
       - name: Upload projects to artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: Projects-${{ github.event.inputs.destination_folder }}
           path: ${{ github.event.inputs.destination_folder }}/Projects/**
