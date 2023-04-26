@@ -23,7 +23,7 @@ jobs:
           JSON="${JSON//'%'/'%25'}"
           JSON="${JSON//$'\n'/'%0A'}"
           JSON="${JSON//$'\r'/'%0D'}"
-          echo "name=works::${JSON}" >> $GITHUB_OUTPUT
+          echo "works=${JSON}" >> $GITHUB_OUTPUT
 
       - name: Checking data
         run: echo "${{ steps.setup_repos.outputs.works }}"
