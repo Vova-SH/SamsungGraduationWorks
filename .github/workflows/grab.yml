@@ -23,7 +23,7 @@ jobs:
           JSON="${JSON//'%'/'%25'}"
           JSON="${JSON//$'\n'/'%0A'}"
           JSON="${JSON//$'\r'/'%0D'}"
-          echo "::set-output name=works::${JSON}"
+          echo "name=works::${JSON}" >> $GITHUB_OUTPUT
 
       - name: Checking data
         run: echo "${{ steps.setup_repos.outputs.works }}"
@@ -113,7 +113,7 @@ jobs:
           path: ${{ github.event.inputs.destination_folder }}/Projects/**
 
       - name: Push new projects
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v4.16
         with:
           commit_user_name: git-bot
           commit_user_email: git-bot@noreply.github.com
