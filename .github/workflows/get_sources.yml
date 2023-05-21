@@ -1,0 +1,63 @@
+name: Make artifacts with repo sources
+
+on:
+  workflow_dispatch:
+    inputs:
+      destination_folder:
+        description: 'Choose folder'
+        required: true
+
+jobs:
+  get-list-works:
+    runs-on: ubuntu-latest
+    outputs:
+      works: ${{ steps.setup_repos.outputs.works }}
+    steps:
+      - name: Checkout last changes
+        uses: actions/checkout@v3.5.2
+
+      - name: Read base information from ${{ github.event.inputs.destination_folder }}/repos.json
+        id: setup_repos
+        run: |
+          JSON=$(cat ./${{ github.event.inputs.destination_folder }}/repos.json)
+          JSON="${JSON//'%'/'%25'}"
+          JSON="${JSON//$'\n'/''}"
+          JSON="${JSON//$'\r'/'%0D'}"
+          echo "works=${JSON}" >> "$GITHUB_OUTPUT"
+      - name: Checking data
+        run: echo "${{ steps.setup_repos.outputs.works }}"
+    
+
+  load-latest-sources:
+    needs: get-list-works
+    strategy:
+      matrix:
+        data: ${{ fromJson(needs.get-list-works.outputs.works) }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Load latest release from ${{ matrix.data.repo }}
+        continue-on-error: true
+        uses: actions/checkout@v3.5.2
+        with:
+          repository: ${{ matrix.data.repo }}
+          path: repos/${{ matrix.data.folder }}
+        
+      - name: Save to artifacts
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: ${{ matrix.data.folder }}
+          path: repos/${{ matrix.data.folder }}/*
+  create-artifact:
+    needs: load-latest-sources
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download all correct projects
+        uses: actions/download-artifact@v3.0.2
+        with:
+          path: ${{ github.event.inputs.destination_folder }}/Projects
+
+      - name: Upload projects to artifacts
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: Projects-${{ github.event.inputs.destination_folder }}
+          path: ${{ github.event.inputs.destination_folder }}/Projects/**

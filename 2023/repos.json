@@ -5,7 +5,7 @@
   {repo: "mivlix/GreedCity", folder: "Иванов Михаил"},
   {repo: "NikitaIgnatenko/MinesweeperVersus", folder: "Игнатенко Никита"},
   {repo: "Klyushova/Esperanto", folder: "Клюшова Анастасия"},
-  {repo: "YOUR_NICKNAME/REPOSITORY_NAME", folder: "Маругина Мария"},
+  {repo: "MaruginaMaria/NewTimelessness", folder: "Маругина Мария"},
   {repo: "anastasiamitsura/AR_Bird_", folder: "Мицура Анастасия"},
   {repo: "annel1d/StudentDB", folder: "Образцов Дмитрий"},
   {repo: "NovaStream2030/DigitalWellbeing", folder: "Панин Георгий"},
@@ -22,6 +22,17 @@
   {repo: "Gre4ka1/Cyberlife", folder: "Гречешнюк Даниил"},
   {repo: "RealIlya/ImpressMap", folder: "Ворончук Илья"},
   {repo: "AnastasiaZvezdina/MyGame", folder: "Звездина Анастасия"},
-  {repo: "AnnaVikj/Project_2", folder: "Ганзюк Анна"}
+  {repo: "AnnaVikj/Final_project", folder: "Ганзюк Анна"},
+  {repo: "HITLUK/Tests", folder: "Кузнецов Кирилл"},
+  {repo: "Chernov2312/Project", folder: "Чернов Максим"},
+  {repo: "SaroyanAram/Paint", folder: "Сароян Арам"},
+  {repo: "Wolferok22/MyCapi2", folder: "Морозов Сергей"},
+  {repo: "loow71/StudentsDatabase", folder: "Илясов Алексей"},
+  {repo: "Veteroch4k/MathDash", folder: "Попов Виктор"},
+  {repo: "PytoByte/Jumper", folder: "Маркидонов Владимир"},
+  {repo: "ritzle/EgeUdarenia", folder: "Кирилл Флек, Рязанов Влад"},
+  {repo: "ianakaufmann/TracksandBingo2", folder: "Кауфман Яна, Пономарев Арсений"},  
+  {repo: "Grunteck/TamaPetSolood", folder: "Солодкин Фёдор"},
+  {repo: "VladSBA/WordTeacher", folder: "Софронов Владислав"},
   {repo: "IlyaStub/ProjectStoProc", folder: "Стубарев Илья"}
 ]
